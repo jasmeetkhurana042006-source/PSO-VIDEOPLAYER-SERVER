@@ -1,1 +1,1680 @@
 
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Dhurandhar - Video Player</title>
+</head>
+<body>
+  
+  <style>
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+  @import url('https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+  #PopularPosts1,
+  .page header,
+  #comments,
+  .post-share-buttons,
+  h3,
+  .bg-photo-container,
+  .bg-photo-overlay, .blogger, .image-attribution, .page_body .centered-top-container, .centered-top{
+    display: none;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Quantico", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    color: white;
+  }
+
+  .post-body {
+    margin: 0;
+    background: #0b0b0b;
+  }
+
+  body{
+    color:#fff;
+    overflow-x:hidden;
+    background: #0b0b0b;
+
+  }
+
+  .Blog .blog-posts .post-outer-container .post-outer {
+    padding-bottom: 0;
+  }
+
+  .Blog .blog-posts .post-outer-container,
+  .centered-bottom {
+    padding: 0;
+  }
+
+  .page_body .widget {
+    margin-bottom: 0;
+  }
+
+  .page_body .centered {
+    padding: 0;
+    max-width: unset;
+  }
+
+  @media screen and (max-width: 800px) {
+    div.widget.Blog .blog-posts .post-outer-container {
+      padding: 0;
+    }
+  }
+
+  /* NAVBAR */
+  .navbar{
+    height:64px;
+    background:#050505;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 14px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+
+  .left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .menu-btn{
+    font-size:26px;
+    color:#fff;
+    cursor:pointer;
+    line-height:1;
+    user-select:none;
+  }
+
+  .logo{
+    color:#ff0000;
+    font-size:24px;
+    font-weight:700;
+    letter-spacing:-0.5px;
+    display:flex;
+    align-items:center;
+  }
+
+  .right-icons{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+  }
+
+  .nav-search-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+  }
+
+  .nav-search-btn svg{
+    width:24px;
+    height:24px;
+    stroke:#fff;
+    transition:0.2s ease;
+  }
+
+  .nav-search-btn:hover svg{
+    transform:scale(1.1);
+    stroke:#ff0000;
+  }
+
+  /* SIDEBAR */
+  .sidebar{
+    position:fixed;
+    top:64px;
+    left:-78%;
+    width:78%;
+    max-width:320px;
+    height:calc(100vh - 64px);
+    background:#000;
+    overflow-y:auto;
+    transition:0.35s ease;
+    z-index:999;
+    border-right:1px solid rgba(255,255,255,0.16);
+  }
+
+  .sidebar.active{
+    left:0;
+  }
+
+  .sidebar-inner{
+    padding:0;
+  }
+
+  .sidebar-title{
+    display:none;
+  }
+
+  .sidebar a,
+  .dropdown-btn{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    min-height:74px;
+    padding:0 22px;
+    color:#fff;
+    text-decoration:none;
+    font-size:17px;
+    font-weight:700;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    background:#000;
+    border:none;
+    outline:none;
+    cursor:pointer;
+    border-bottom:1px solid rgba(255,255,255,0.14);
+  }
+
+  .dropdown-btn span:last-child{
+    font-size:15px;
+    color:#fff;
+    transition:transform 0.25s ease;
+  }
+
+  .dropdown-btn.active span:last-child{
+    transform:rotate(180deg);
+  }
+
+  .submenu{
+    display:none;
+    background:#0d0d0d;
+  }
+
+  .submenu a{
+    min-height:56px;
+    padding:0 32px;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:0.4px;
+    color:#dcdcdc;
+    text-transform:uppercase;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+
+  .submenu.show{
+    display:block;
+  }
+
+  .overlay{
+    position:fixed;
+    top:64px;
+    left:0;
+    width:100%;
+    height:calc(100vh - 64px);
+    background:rgba(0,0,0,0.28);
+    display:none;
+    z-index:998;
+  }
+
+  .overlay.active{
+    display:block;
+  }
+
+  .marvel-poster {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .marvel-poster img {
+    transition: transform 0.4s ease;
+  }
+
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.4s ease;
+  }
+
+  .play-btn {
+    transform: scale(0.8);
+    transition: 0.3s ease;
+  }
+
+  .marvel-card:hover .play-overlay {
+    opacity: 1;
+  }
+
+  .marvel-card:hover img {
+    transform: scale(1.08);
+  }
+
+  .marvel-card:hover .play-btn {
+    transform: scale(1);
+  }
+
+  /* VIDEO PLAYER STYLING */
+  .video-player {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+    user-select: none;
+  }
+
+  .video-player video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    background: #000;
+  }
+
+  .video-player::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.4),
+      transparent 22%,
+      transparent 70%,
+      rgba(0, 0, 0, 0.7)
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .video-title {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 8;
+    letter-spacing: 0.3px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    transition: opacity 0.25s ease;
+  }
+
+  .center-controls {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 34px;
+    z-index: 8;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .center-btn {
+    pointer-events: auto;
+    width: 74px;
+    height: 74px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(18, 18, 18, 0.72);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.2s ease, background 0.2s ease;
+    position: relative;
+  }
+
+  .center-btn:hover {
+    transform: scale(1.08);
+    background: rgba(32, 32, 32, 0.88);
+  }
+
+  .center-btn svg {
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+    display: block;
+  }
+
+  .big-play {
+    width: 112px;
+    height: 112px;
+    background: #e50914;
+    box-shadow: 0 10px 30px rgba(229, 9, 20, 0.35);
+  }
+
+  .big-play:hover {
+    background: #f20d18;
+  }
+
+  .big-play svg {
+    width: 44px;
+    height: 44px;
+    margin-left: 3px;
+  }
+
+  .seek-badge {
+    position: absolute;
+    bottom: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    opacity: 0.92;
+    pointer-events: none;
+  }
+
+  .controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9;
+    padding: 10px 14px 12px;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .progress-container {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .progress {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.24);
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .progress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #e50914;
+    border: 2px solid #fff;
+    box-shadow: -1000px 0 0 1000px #e50914;
+  }
+
+  .progress::-moz-range-track {
+    height: 5px;
+    background: rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+  }
+
+  .progress::-moz-range-thumb {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #e50914;
+    border: 2px solid #fff;
+    cursor: pointer;
+  }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .left-controls,
+  .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .control-btn {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+    position: relative;
+  }
+
+  .control-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+  }
+
+  .control-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    display: block;
+  }
+
+  .time {
+    color: #fff;
+    font-size: 14px;
+    min-width: 120px;
+    letter-spacing: 0.2px;
+  }
+
+  .volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 78px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.28);
+    cursor: pointer;
+  }
+
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+  }
+
+  .volume-slider::-moz-range-thumb {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+  }
+
+  .hide-ui .controls,
+  .hide-ui .video-title,
+  .hide-ui .center-controls {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .video-player:fullscreen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    aspect-ratio: auto;
+    border-radius: 0;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .video-player:fullscreen video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100vw + 0px);
+    height: calc(100vh + 20px);
+    min-width: calc(100vw + 20px);
+    min-height: calc(100vh + 20px);
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+  }
+
+  .video-player:-webkit-full-screen video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100vw + 20px);
+    height: calc(100vh + 20px);
+    min-width: calc(100vw + 20px);
+    min-height: calc(100vh + 20px);
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    padding-left: 0px;
+  }
+
+  .loading-screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 18px;
+    color: #fff;
+  }
+
+  .spinner {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.18);
+    border-top: 5px solid #e50914;
+    animation: spin 1s linear infinite;
+  }
+
+  .loading-text {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .loading-timer {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e50914;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .lang-scroll {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    gap: 10px;
+    padding: 10px;
+    margin-top: 20px;
+    scroll-behavior: smooth;
+    width: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    align-items: center;
+    min-height: 100px;
+    padding-left: 10px;
+  }
+
+  .lang-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .details {
+    overflow: hidden;
+  }
+
+  .lang-scroll a {
+    flex: 0 0 auto;
+  }
+
+  .lang-scroll button {
+    background: #0b0b0b;
+    color: white;
+    border: 1px solid red;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+
+  .lang-scroll button:hover {
+    background: red !important;
+    color: white !important;
+    border: none !important;
+  }
+
+  .lang-scroll button.active {
+    background: red !important;
+    color: white !important;
+    border: none !important;
+  }
+
+  #langPopup {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+  }
+
+  .popup-content {
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .popup-text {
+    font-size: 20px;
+    margin-top: 15px;
+    letter-spacing: 1px;
+  }
+
+  /* EPISODES ACCORDION */
+  .episodes-section {
+    margin-top: -10px;
+    padding: 0 10px 10px;
+    color: #fff;
+  }
+
+  .episodes-heading {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .season-box {
+    background: #161a2b;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  }
+
+  .season-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 18px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .season-toggle .arrow {
+    font-size: 16px;
+    transition: 0.3s ease;
+  }
+
+  .season-box.active .season-toggle .arrow {
+    transform: rotate(180deg);
+  }
+
+  .season-content {
+    display: none;
+    padding: 0 12px 12px;
+  }
+
+  .season-box.active .season-content {
+    display: block;
+  }
+
+  .episode-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+    background: #161a2b;
+    border-radius: 14px;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.25s ease;
+  }
+
+  .episode-item:hover {
+    background: #161a2b;
+    transform: translateY(-1px);
+  }
+
+  .episode-thumb {
+    width: 92px;
+    height: 56px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .episode-info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .episode-title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+  }
+
+  .episode-runtime {
+    font-size: 12px;
+    color: #b8b8b8;
+    line-height: 1.35;
+    display: block;
+  }
+
+  .anime-divider{
+    height:1px;
+    margin:10px 0 20px;
+    background:linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+    box-shadow:0 0 8px rgba(255,255,255,0.4);
+  }
+
+  @media (max-width:480px){
+    .sidebar{
+      width:75%;
+      left:-75%;
+    }
+
+    .sidebar a,
+    .dropdown-btn{
+      min-height:70px;
+      font-size:16px;
+      padding:0 18px;
+    }
+
+    .submenu a{
+      font-size:13px;
+      padding:0 28px;
+      font-family: "Quantico", sans-serif;
+      font-weight:700;
+      font-style:normal;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .video-title {
+      font-size: 13px;
+      top: 12px;
+      left: 12px;
+    }
+
+    .center-controls {
+      gap: 18px;
+    }
+
+    .center-btn {
+      width: 56px;
+      height: 56px;
+    }
+
+    .center-btn svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .big-play {
+      width: 82px;
+      height: 82px;
+    }
+
+    .big-play svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .control-btn {
+      width: 30px;
+      height: 30px;
+    }
+
+    .control-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .time {
+      font-size: 12px;
+      min-width: auto;
+    }
+
+    .volume-slider {
+      width: 58px;
+    }
+
+    .controls {
+      padding: 8px 10px 10px;
+    }
+
+    .progress {
+      height: 4px;
+    }
+
+    .spinner {
+      width: 58px;
+      height: 58px;
+    }
+
+    .loading-text {
+      font-size: 16px;
+    }
+
+    .loading-timer {
+      font-size: 22px;
+    }
+  }
+  .video-alert {
+  margin: 15px 10px;
+  padding: 12px 15px;
+  border-radius: 8px;
+
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid red;
+
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+
+  box-shadow: 0 0 10px rgba(255,0,0,0.4);
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px rgba(255,0,0,0.3);
+  }
+  to {
+    box-shadow: 0 0 15px rgba(255,0,0,0.8);
+  }
+  }
+</style>
+
+<!--- Main Content Start ---->
+
+<!--SIDEBAR-->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-inner">
+    <div class="sidebar-title">BROWSE</div>
+    <a href="#">Home</a>
+    <a href="https://premiumstorehub-webapp123.blogspot.com/p/series.html">Series</a>
+    <a href="https://premiumstorehub-webapp123.blogspot.com/p/movies.html">Movies</a>
+    <a href="https://premiumstorehub-webapp123.blogspot.com/p/tv-shows_2.html">TV Shows</a>
+    <a href="https://premiumstorehub-webapp123.blogspot.com/p/anime.html">Animes</a>
+    <a href="https://premiumstorehub-webapp123.blogspot.com/p/cartoons.html">Cartoons</a>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<!--NAVBAR-->
+<div class="navbar">
+  <div class="left">
+    <span class="menu-btn" onclick="toggleMenu()">☰</span>
+    <div class="logo">
+      <img alt="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpBsOb8m12pedf6sixYRzlXTvO9vSJeeRtSCcrrOO-rtmZbTfRqrgczLRtkPxBt-b7y3jOu9pNEHDMNvjjj31Yl31eMK3kwa7Mbcnd1BqpkisrMv9zTQirYIDZ2SFbK9SBv1tVW6LhAlHT15f8S3ghCYh9aoVRMQzNi72HqwR_fmgR3hOyTak1NAn7x_AS/s3264/36022.png" style="width: 150px;" />
+    </div>
+  </div>
+
+  <div class="right-icons">
+    <a href="https://premiumstorehub-webapp123.blogspot.com/p/searchpage_1.html?m=1">
+      <button class="nav-search-btn">
+        <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+        </svg>
+      </button>
+    </a>
+  </div>
+</div>
+
+<!--- VIDEO PLAYER SECTION --->
+
+<div class="video-player" id="videoPlayer">
+  <div class="loading-screen" id="loadingScreen">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading Video...</div>
+    <div class="loading-timer" id="loadingTimer">5s</div>
+  </div>
+
+  <video id="video">
+    <source src="https://worker-lingering-surf-fadb.yisehin453.workers.dev/eyJ1cmwiOiJodHRwczpcL1wvaHViLmhhaWxtYXJ5LmxhdFwvZTYzYjJhYmRkMGY2ZTU2NWYxZmIzMGIzY2MzNzI1OGE_dG9rZW49MTc3NTI0MDUyMyIsInRpbWVzdGFtcCI6MTc3NTI0NjgwMjAwMCwiaGFzaCI6ImE3ZDllYzc3ODc3ZmNiOGYxNDMwNjgxNDAyNDM3ZTdjYTZhMzE4ZjJmZTdjNGE5YWFiNjBkMTE3MGFjODQ4NGQiLCJmaWxlbmFtZSI6IkphcGFuZXNlIC0gRGVtb24gU2xheWVyIEtpbWV0c3Ugbm8gWWFpYmEgSW5maW5pdHkgQ2FzdGxlICgyMDI1KSAxMDgwcCBXRUItREwgW1VudG91Y2hlZF0ubWt2In0" type="video/mp4"></source>
+  </video>
+
+  <div class="center-controls" id="centerControls">
+    <button class="center-btn" id="backwardBtn">
+      <svg viewbox="0 0 24 24">
+        <path d="M11 18V6L2.5 12 11 18zm1-6c0-4.42 3.58-8 8-8v2a6 6 0 1 0 0 12v2c-4.42 0-8-3.58-8-8z">
+      </path></svg>
+      <span class="seek-badge">10</span>
+    </button>
+
+    <button class="center-btn big-play" id="playPauseCenter">
+      <svg id="centerPlayIcon" viewbox="0 0 24 24">
+        <path d="M8 5v14l11-7z">
+      </path></svg>
+    </button>
+
+    <button class="center-btn" id="forwardBtn">
+      <svg viewbox="0 0 24 24">
+        <path d="M13 18V6l8.5 6-8.5 6zm-1-6c0 4.42-3.58 8-8 8v-2a6 6 0 1 0 0-12V4c4.42 0 8 3.58 8 8z">
+      </path></svg>
+      <span class="seek-badge">10</span>
+    </button>
+  </div>
+
+  <div class="controls" id="controls">
+    <div class="progress-container">
+      <input class="progress" id="progressBar" type="range" value="0" />
+    </div>
+
+    <div class="controls-row">
+      <div class="left-controls">
+        <button class="control-btn" id="playPauseBtn">
+          <svg id="bottomPlayIcon" viewbox="0 0 24 24">
+            <path d="M8 5v14l11-7z">
+          </path></svg>
+        </button>
+
+        <div class="time" id="timeDisplay">0:00 / 0:00</div>
+      </div>
+
+      <div class="right-controls">
+        <button class="control-btn" id="muteBtn">
+          <svg id="volumeIcon" viewbox="0 0 24 24">
+            <path d="M3 9v6h4l5 4V5L7 9H3z">
+          </path></svg>
+        </button>
+
+        <input class="volume-slider" id="volumeSlider" max="1" type="range" value="1" />
+
+        <button class="control-btn" id="fullscreenBtn">
+          <svg id="fullscreenIcon" viewbox="0 0 24 24">
+            <path d="M7 3H3v4h2V5h2V3zm14 0h-4v2h2v2h2V3z">
+          </path></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--- VIDEO PLAYER SECTION END --->
+
+<!--- VIDEO PLAYER CONTENT SECTION-->
+<div class="details">
+  <h4 style="color: white; transform: translateX(10px) translateY(15px);">
+    Demon Slayer: Kimetsu no Yaiba <br>Infinity Castle  </h4>
+  <br /> <button style="background: red; border: none; color: white; font-size: 12.5px; padding-left: 10px; padding-right: 10px; transform: translateX(10px); width: auto;"> HD </button><button style="background: red; border: none; color: white; font-size: 12.5px; padding-left: 10px; padding-right: 10px; transform: translateX(20px); width: auto;"> 2 Hr 35 Min</button><button style="background: red; border: none; color: white; font-size: 12.5px; padding-left: 10px; padding-right: 10px; transform: translateX(30px); width: auto;">Anime</button>
+<div class="anime-divider" style="transform: translateY(10px);"></div>
+    <h4 style="color: white; transform: translateX(10px) translateY(15px);">Available Languages</h4>
+  
+  <div class="lang-scroll" style="transform: translateY(-55px) translateX(-10px);">
+    <a class="lang-btn" href="https://pso-videoplayer-server.wasmer.app/Demon-Slayer-Kitmetsu-No-Yaiba-Hindi-Videoplayer.html">
+      <button style="background: rgb(11, 11, 11); border: 1px solid red; color: white; height: 25px; transform: translateY(30px) translateX(10px); width: 80px;">Hindi</button>
+    </a>
+    <a class="lang-btn" href="https://pso-videoplayer-server.wasmer.app/Demon-Slayer-Kitmetsu-No-Yaiba-English-Videoplayer.html">
+      <button style="background: rgb(11, 11, 11); border: 1px solid red; color: white; height: 25px; transform: translateY(30px) translateX(20px); width: 80px;">English</button>
+    </a>
+    <a class="lang-btn" href="https://pso-videoplayer-server.wasmer.app/Demon-Slayer-Kitmetsu-No-Yaiba-Japanese-Videoplayer.html">
+      <button class="active" style="background: rgb(11, 11, 11); border: 1px solid red; color: white; height: 25px; transform: translateY(30px) translateX(30px); width: 80px;">Japanese</button>
+    </a>
+    <a class="lang-btn" href="https://pso-videoplayer-server.wasmer.app/Demon-Slayer-Kitmetsu-No-Yaiba-Tamil-Videoplayer.html">
+      <button style="background: rgb(11, 11, 11); border: 1px solid red; color: white; height: 25px; transform: translateY(30px) translateX(40px); width: 80px;">Tamil</button>
+    </a>
+    <a class="lang-btn" href="https://pso-videoplayer-server.wasmer.app/Demon-Slayer-Kitmetsu-No-Yaiba-Telugu-Videoplayer.html">
+      <button style="background: rgb(11, 11, 11); border: 1px solid red; color: white; height: 25px; transform: translateY(30px) translateX(50px); width: 80px;">Telugu</button>
+    </a>
+  </div><div style="transform: translateY(-45px);" class="video-alert">
+  🚫 Video not playing?  
+  <br>⏳ Wait 2–3 minutes or 🔄 refresh the page.
+  </div>
+</div>
+
+<!--LANGUAGE LOADING POPUP-->
+<div id="langPopup">
+  <div class="popup-content">
+    <div class="spinner"></div>
+    <div class="popup-text">
+      Language Changing... <span id="countdown">3</span>
+    </div>
+  </div>
+</div>
+
+<div class="anime-divider" style="transform: translateY(-45px);"></div>
+<!--🔥 AD START-->
+<div style="margin: 15px 0px; overflow-x: hidden; text-align: center; transform: translateY(-40px);">
+<script>
+  atOptions = {
+    'key' : '08bbcf6f93b9f47454181e1c5b9c218c',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/08bbcf6f93b9f47454181e1c5b9c218c/invoke.js"></script>
+
+
+<br><br><br><a class="lang-btn" href="https://premiumstorehub-webapp123.blogspot.com/p/homepage_1.html?m=1#X" style="width: 100%;">
+  <button class="active" style="background: red; border-radius: 5px; border: none; color: white; font-size: 18px; font-weight: 800; height: 40px; transform: translateY(-30px) translateX(0px); width: 100%;">
+    <i class="fa-solid fa-circle-arrow-left" style="margin-right: 8px;"></i>
+    Back To Homepage
+  </button>
+</a>
+<script>
+  atOptions = {
+    'key' : '08bbcf6f93b9f47454181e1c5b9c218c',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/08bbcf6f93b9f47454181e1c5b9c218c/invoke.js"></script>
+<!--🔥 AD START-->
+<div style="margin: 15px 0px; overflow-x: auto; text-align: center; transform: translateY(-10px);">
+  <script>
+    atOptions = {
+      'key' : '08bbcf6f93b9f47454181e1c5b9c218c',
+      'format' : 'iframe',
+      'height' : 90,
+      'width' : 728,
+      'params' : {}
+    };
+  </script>
+<script async="async" data-cfasync="false" src="https://pl29045204.profitablecpmratenetwork.com/8c5a43f1e476847499a684f9aa1040d8/invoke.js"></script>
+<div id="container-8c5a43f1e476847499a684f9aa1040d8"></div>
+    <div style="transform: translateY(15px);" class="anime-divider"></div>
+    <!-- FOOTER -->
+   <br><br> <div class="footer">
+      <p>© 2026 | All Rights Reserved</p>
+      
+    </div>
+<script>
+  const marvelPosts = [
+    { title: "Daredevil: Born Again", meta: "2026", image: "https://sfrareview.org/wp-content/uploads/2025/07/daredevil.jpg", link: "#", alt: "Daredevil" },
+    { title: "Thor", meta: "Marvel", image: "https://via.placeholder.com/300x450", link: "#", alt: "Thor" },
+    { title: "Jujutsu Kaisen", meta: "Anime", image: "https://codmark.github.io/nxprime_img/poster/jujutsu-kaisen-season-3.AVIF", link: "#", alt: "Jujutsu" },
+    { title: "Spider-Man", meta: "Marvel", image: "https://via.placeholder.com/300x450", link: "#", alt: "Spider-Man" },
+    { title: "Doctor Strange", meta: "Marvel", image: "https://via.placeholder.com/300x450", link: "#", alt: "Doctor Strange" },
+    { title: "Black Panther", meta: "Marvel", image: "https://via.placeholder.com/300x450", link: "#", alt: "Black Panther" },
+    { title: "Hulk", meta: "Marvel", image: "https://via.placeholder.com/300x450", link: "#", alt: "Hulk" },
+    { title: "Wanda", meta: "Marvel", image: "https://via.placeholder.com/300x450", link: "#", alt: "Wanda" },
+    { title: "Post 9", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+9", link: "#", alt: "Post 9" },
+    { title: "Post 10", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+10", link: "#", alt: "Post 10" },
+    { title: "Post 11", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+11", link: "#", alt: "Post 11" },
+    { title: "Post 12", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+12", link: "#", alt: "Post 12" },
+    { title: "Post 13", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+13", link: "#", alt: "Post 13" },
+    { title: "Post 14", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+14", link: "#", alt: "Post 14" },
+    { title: "Post 15", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+15", link: "#", alt: "Post 15" },
+    { title: "Post 16", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+16", link: "#", alt: "Post 16" },
+    { title: "Post 17", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+17", link: "#", alt: "Post 17" },
+    { title: "Post 18", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+18", link: "#", alt: "Post 18" },
+    { title: "Post 19", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+19", link: "#", alt: "Post 19" },
+    { title: "Post 20", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+20", link: "#", alt: "Post 20" },
+    { title: "Post 21", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+21", link: "#", alt: "Post 21" },
+    { title: "Post 22", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+22", link: "#", alt: "Post 22" },
+    { title: "Post 23", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+23", link: "#", alt: "Post 23" },
+    { title: "Post 24", meta: "2026", image: "https://via.placeholder.com/300x450?text=Post+24", link: "#", alt: "Post 24" }
+  ];
+
+  function shuffle(array) {
+    let arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function renderMarvel() {
+    const container = document.getElementById("marvelSlider");
+    if (!container) return;
+
+    const random8 = shuffle(marvelPosts).slice(0, 8);
+
+    container.innerHTML = random8.map(post => `
+      <div class="marvel-card">
+        <a href="${post.link}" class="marvel-poster">
+          <img src="${post.image}" alt="${post.alt}">
+          <div class="play-overlay">
+            <div class="play-btn">
+              <svg viewBox="0 0 64 64" width="50" height="50">
+                <circle cx="32" cy="32" r="30" fill="rgba(0,0,0,0.6)" />
+                <polygon points="26,20 48,32 26,44" fill="white" />
+              </svg>
+            </div>
+          </div>
+        </a>
+        <h3>${post.title}</h3>
+        <p>${post.meta}</p>
+      </div>
+    `).join('');
+  }
+
+  renderMarvel();
+
+  const trendingPosts = [
+    {
+      title: "Dhurandhar: The Revenge",
+      meta: "2026 • Hindi • Action • Thriller",
+      description: "A dark revenge saga filled with fire, power, and ruthless action. One man returns to settle the score.",
+      image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnQ4Cor-cP3Y-rLoC96Id4j3PCyiV7gcyXWYzQVZTL-jL6apjQm5SjGjiH_3_zcgvsMHtCkkMxqdiNToXIauxS613uwCYblgmzHfOKWp7oWXVeQYL6822JKX8GLqN2pgp8AhCLaeINBBI88o58Grhs1tqdNFPvXzBTxoC_kOnOCBb9caGfRA682jKmSW2o/s3264/36671.jpg",
+      link: "#"
+    },
+    {
+      title: "Stranger Things",
+      meta: "2016 • English • Sci-Fi • Horror",
+      description: "Mystery grows deeper as supernatural forces return, pulling Hawkins into another terrifying chapter.",
+      image: "https://m.media-amazon.com/images/M/MV5BNDk5MDFlYjYtZjQ5ZS00ZjhkLWJkYmMtYzhmZjkyOWExY2M3XkEyXkFqcGc@._V1_.jpg",
+      link: "#"
+    },
+    {
+      title: "The Boys",
+      meta: "2019 • English • Action • Crime",
+      description: "A brutal world where fame, power, and corruption collide as ordinary people fight dangerous heroes.",
+      image: "https://cdn.marvel.com/content/2x/daredevilbornagain_lob_crd_03.jpg",
+      link: "#"
+    },
+    {
+      title: "Demon Slayer",
+      meta: "2020 • Japanese • Anime • Action",
+      description: "A visually stunning journey of courage, demons, and destiny as Tanjiro battles through chaos.",
+      image: "https://image.tmdb.org/t/p/original/taT33NroOl2Fn8bUGj8bwdmNw3G.jpg",
+      link: "#"
+    }
+  ];
+
+  function setFeaturedTrending(post) {
+    const img = document.getElementById("featuredTrendingImage");
+    const title = document.getElementById("featuredTrendingTitle");
+    const meta = document.getElementById("featuredTrendingMeta");
+    const desc = document.getElementById("featuredTrendingDesc");
+    const link = document.getElementById("featuredTrendingLink");
+    const badge = document.getElementById("featuredBadge");
+
+    if (img) {
+      img.src = post.image;
+      img.alt = post.title;
+    }
+    if (title) title.textContent = post.title;
+    if (meta) meta.textContent = post.meta;
+    if (desc) desc.textContent = post.description;
+    if (link) link.href = post.link;
+    if (badge) badge.textContent = post.title;
+  }
+
+  function showRandomFeaturedTrending() {
+    const randomPost = trendingPosts[Math.floor(Math.random() * trendingPosts.length)];
+    setFeaturedTrending(randomPost);
+  }
+
+  showRandomFeaturedTrending();
+
+  /* VIDEO PLAYER JS */
+  const player = document.getElementById("videoPlayer");
+  const video = document.getElementById("video");
+  const playPauseBtn = document.getElementById("playPauseBtn");
+  const playPauseCenter = document.getElementById("playPauseCenter");
+  const backwardBtn = document.getElementById("backwardBtn");
+  const forwardBtn = document.getElementById("forwardBtn");
+  const progressBar = document.getElementById("progressBar");
+  const timeDisplay = document.getElementById("timeDisplay");
+  const muteBtn = document.getElementById("muteBtn");
+  const volumeSlider = document.getElementById("volumeSlider");
+  const fullscreenBtn = document.getElementById("fullscreenBtn");
+  const centerPlayIcon = document.getElementById("centerPlayIcon");
+  const bottomPlayIcon = document.getElementById("bottomPlayIcon");
+  const volumeIcon = document.getElementById("volumeIcon");
+  const fullscreenIcon = document.getElementById("fullscreenIcon");
+  const loadingScreen = document.getElementById("loadingScreen");
+  const loadingTimer = document.getElementById("loadingTimer");
+
+  if (player && video) {
+    let hideTimeout;
+    let loadingSeconds = 5;
+    let lastVolume = 1;
+
+    function playSVG() {
+      return '<path d="M8 5v14l11-7z"/>';
+    }
+
+    function pauseSVG() {
+      return '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
+    }
+
+    function volumeHighSVG() {
+      return '<path d="M3 9v6h4l5 4V5L7 9H3zm10.5 3c0-1.77-1-3.29-2.5-4.03v8.05A4.47 4.47 0 0 0 13.5 12zm2.5-8.77v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+    }
+
+    function volumeLowSVG() {
+      return '<path d="M3 9v6h4l5 4V5L7 9H3zm10.5 3c0-1.77-1-3.29-2.5-4.03v8.05A4.47 4.47 0 0 0 13.5 12z"/>';
+    }
+
+    function volumeMuteSVG() {
+      return '<path d="M16.5 12c0-.77-.17-1.5-.46-2.15l1.51-1.51A6.93 6.93 0 0 1 18.5 12c0 1.36-.39 2.63-1.05 3.71l-1.5-1.5c.35-.66.55-1.41.55-2.21zM3 9v6h4l5 4V5L7 9H3zm16.71-1.29-1.42-1.42-14 14 1.42 1.42 14-14z"/>';
+    }
+
+    function fullscreenEnterSVG() {
+      return '<path d="M7 3H3v4h2V5h2V3zm14 0h-4v2h2v2h2V3zM5 17H3v4h4v-2H5v-2zm16 0h-2v2h-2v2h4v-4z"/>';
+    }
+
+    function fullscreenExitSVG() {
+      return '<path d="M9 3H7v2H5v2h4V3zm10 2h-2V3h-2v4h4V5zM7 17h2v4H5v-2h2v-2zm10 0h2v2h-2v2h-2v-4h2z"/>';
+    }
+
+    function formatTime(time) {
+      if (isNaN(time)) return "0:00";
+      const mins = Math.floor(time / 60);
+      const secs = Math.floor(time % 60).toString().padStart(2, "0");
+      return `${mins}:${secs}`;
+    }
+
+    function updatePlayIcons() {
+      if (!centerPlayIcon || !bottomPlayIcon) return;
+
+      if (video.paused) {
+        centerPlayIcon.innerHTML = playSVG();
+        bottomPlayIcon.innerHTML = playSVG();
+      } else {
+        centerPlayIcon.innerHTML = pauseSVG();
+        bottomPlayIcon.innerHTML = pauseSVG();
+      }
+    }
+
+    function updateVolumeIcon() {
+      if (!volumeIcon) return;
+
+      if (video.muted || video.volume === 0) {
+        volumeIcon.innerHTML = volumeMuteSVG();
+      } else if (video.volume < 0.5) {
+        volumeIcon.innerHTML = volumeLowSVG();
+      } else {
+        volumeIcon.innerHTML = volumeHighSVG();
+      }
+    }
+
+    function isFullscreenActive() {
+      return !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.msFullscreenElement
+      );
+    }
+
+    function updateFullscreenIcon() {
+      if (!fullscreenIcon) return;
+      fullscreenIcon.innerHTML = isFullscreenActive() ? fullscreenExitSVG() : fullscreenEnterSVG();
+    }
+
+    async function safePlay() {
+      try {
+        await video.play();
+      } catch (err) {
+        console.log("Play error:", err);
+      }
+    }
+
+    function togglePlay() {
+      if (loadingScreen && loadingScreen.style.display !== "none") return;
+
+      if (video.paused) {
+        safePlay();
+      } else {
+        video.pause();
+      }
+    }
+
+    if (playPauseBtn) {
+      playPauseBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        togglePlay();
+      });
+    }
+
+    if (playPauseCenter) {
+      playPauseCenter.addEventListener("click", function(e) {
+        e.stopPropagation();
+        togglePlay();
+      });
+    }
+
+    video.addEventListener("click", togglePlay);
+
+    if (backwardBtn) {
+      backwardBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        if (loadingScreen && loadingScreen.style.display !== "none") return;
+        video.currentTime = Math.max(0, video.currentTime - 10);
+        showUI();
+      });
+    }
+
+    if (forwardBtn) {
+      forwardBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        if (loadingScreen && loadingScreen.style.display !== "none") return;
+        video.currentTime = Math.min(video.duration || 0, video.currentTime + 10);
+        showUI();
+      });
+    }
+
+    video.addEventListener("loadedmetadata", () => {
+      if (timeDisplay) {
+        timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+      }
+    });
+
+    video.addEventListener("timeupdate", () => {
+      if (video.duration && progressBar) {
+        progressBar.value = (video.currentTime / video.duration) * 100;
+      }
+      if (timeDisplay) {
+        timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+      }
+    });
+
+    if (progressBar) {
+      progressBar.addEventListener("input", function(e) {
+        e.stopPropagation();
+        if (loadingScreen && loadingScreen.style.display !== "none") return;
+        if (video.duration) {
+          video.currentTime = (progressBar.value / 100) * video.duration;
+        }
+        showUI();
+      });
+    }
+
+    if (volumeSlider) {
+      volumeSlider.addEventListener("input", function(e) {
+        e.stopPropagation();
+        const value = parseFloat(volumeSlider.value);
+        video.volume = value;
+
+        if (value > 0) {
+          lastVolume = value;
+        }
+
+        video.muted = value === 0;
+        updateVolumeIcon();
+        showUI();
+      });
+    }
+
+    if (muteBtn) {
+      muteBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+
+        if (video.muted || video.volume === 0) {
+          video.muted = false;
+          video.volume = lastVolume > 0 ? lastVolume : 1;
+          if (volumeSlider) volumeSlider.value = video.volume;
+        } else {
+          lastVolume = video.volume;
+          video.muted = true;
+          if (volumeSlider) volumeSlider.value = 0;
+        }
+
+        updateVolumeIcon();
+        showUI();
+      });
+    }
+
+    async function requestLandscapeFullscreen() {
+      try {
+        if (player.requestFullscreen) {
+          await player.requestFullscreen();
+        } else if (player.webkitRequestFullscreen) {
+          player.webkitRequestFullscreen();
+        } else if (player.msRequestFullscreen) {
+          player.msRequestFullscreen();
+        }
+
+        if (screen.orientation && screen.orientation.lock) {
+          try {
+            await screen.orientation.lock("landscape");
+          } catch (e) {
+            console.log("Orientation lock not supported:", e);
+          }
+        }
+      } catch (err) {
+        console.log("Fullscreen error:", err);
+      }
+    }
+
+    async function exitLandscapeFullscreen() {
+      try {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+
+        if (screen.orientation && screen.orientation.unlock) {
+          try {
+            screen.orientation.unlock();
+          } catch (e) {
+            console.log("Orientation unlock not supported:", e);
+          }
+        }
+      } catch (err) {
+        console.log("Exit fullscreen error:", err);
+      }
+    }
+
+    async function toggleFullscreen() {
+      if (loadingScreen && loadingScreen.style.display !== "none") return;
+
+      if (!isFullscreenActive()) {
+        await requestLandscapeFullscreen();
+      } else {
+        await exitLandscapeFullscreen();
+      }
+
+      updateFullscreenIcon();
+      showUI();
+    }
+
+    if (fullscreenBtn) {
+      fullscreenBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        toggleFullscreen();
+      });
+    }
+
+    video.addEventListener("play", () => {
+      updatePlayIcons();
+      showUI();
+    });
+
+    video.addEventListener("pause", () => {
+      updatePlayIcons();
+      showUI();
+    });
+
+    video.addEventListener("ended", () => {
+      updatePlayIcons();
+      showUI();
+    });
+
+    function showUI() {
+      player.classList.remove("hide-ui");
+      clearTimeout(hideTimeout);
+
+      if (!video.paused && (!loadingScreen || loadingScreen.style.display === "none")) {
+        hideTimeout = setTimeout(() => {
+          player.classList.add("hide-ui");
+        }, 2200);
+      }
+    }
+
+    ["mousemove", "touchstart", "click"].forEach((evt) => {
+      player.addEventListener(evt, showUI);
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      updateFullscreenIcon();
+      showUI();
+    });
+
+    document.addEventListener("webkitfullscreenchange", () => {
+      updateFullscreenIcon();
+      showUI();
+    });
+
+    function startFakeLoading() {
+      if (!loadingScreen || !loadingTimer) {
+        updatePlayIcons();
+        updateVolumeIcon();
+        updateFullscreenIcon();
+        return;
+      }
+
+      loadingTimer.textContent = `${loadingSeconds}s`;
+
+      const interval = setInterval(() => {
+        loadingSeconds--;
+        loadingTimer.textContent = `${loadingSeconds}s`;
+
+        if (loadingSeconds <= 0) {
+          clearInterval(interval);
+          loadingScreen.style.display = "none";
+          updatePlayIcons();
+          updateVolumeIcon();
+          updateFullscreenIcon();
+          showUI();
+        }
+      }, 1000);
+    }
+
+    updatePlayIcons();
+    updateVolumeIcon();
+    updateFullscreenIcon();
+    startFakeLoading();
+  }
+
+  const langBtns = document.querySelectorAll('.lang-scroll button');
+
+  langBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      langBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  const langButtons = document.querySelectorAll('.lang-scroll button');
+
+  langButtons.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      const popup = document.getElementById("langPopup");
+      const countdownEl = document.getElementById("countdown");
+      const parentLink = btn.closest("a");
+
+      if (!popup || !countdownEl || !parentLink) return;
+
+      popup.style.display = "flex";
+
+      let time = 3;
+      countdownEl.innerText = time;
+
+      const interval = setInterval(() => {
+        time--;
+        countdownEl.innerText = time;
+
+        if (time <= 0) {
+          clearInterval(interval);
+          window.location.href = parentLink.href;
+        }
+      }, 1000);
+    });
+  });
+
+  function toggleSeason(button) {
+    const seasonBox = button.parentElement;
+    const allSeasons = document.querySelectorAll('.season-box');
+
+    allSeasons.forEach(box => {
+      if (box !== seasonBox) {
+        box.classList.remove('active');
+      }
+    });
+
+    seasonBox.classList.toggle('active');
+  }
+
+  function toggleMenu() {
+    let sidebar = document.getElementById('sidebar');
+    let overlay = document.getElementById('overlay');
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
+
+  function closeMenu() {
+    document.getElementById('sidebar').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  }
+
+  function closeAllSubmenus() {
+    const submenus = document.querySelectorAll('.submenu');
+    const buttons = document.querySelectorAll('.dropdown-btn');
+
+    submenus.forEach(menu => menu.classList.remove('show'));
+    buttons.forEach(btn => btn.classList.remove('active'));
+  }
+
+  function toggleSubmenu(button, menuId) {
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+
+    const isOpen = menu.classList.contains('show');
+    closeAllSubmenus();
+
+    if (!isOpen) {
+      menu.classList.add('show');
+      button.classList.add('active');
+    }
+  }
+
+  function toggleBrowse(button) {
+    toggleSubmenu(button, 'browseMenu');
+  }
+
+  function toggleCartoons(button) {
+    toggleSubmenu(button, 'cartoonMenu');
+  }
+
+  function toggleAnimeMenu(button) {
+    toggleSubmenu(button, 'animeMenu');
+  }
+
+  function toggleChannels(button) {
+    toggleSubmenu(button, 'channelMenu');
+  }
+
+  function toggleOtt(button) {
+    toggleSubmenu(button, 'ottMenu');
+  }
+
+  function goToSearchPage() {
+    window.location.href = "search.html";
+  }
+</script>
+  
+</body>
+</html>
